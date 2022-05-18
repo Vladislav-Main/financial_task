@@ -35,9 +35,12 @@ const priceTickerSlice = createSlice({
               (state: PriceTicker) => state.ticker === value.ticker
             );
             if (before) {
-              value.changeArrow = before.change < value.change ? -1 : 1;
+              value.changeArrow =
+                before.change * 1000 < value.change * 1000 ? 1 : -1;
               value.changePercentArrow =
-                before.change_percent < value.change_percent ? -1 : 1;
+                before.change_percent * 100 < value.change_percent * 100
+                  ? 1
+                  : -1;
             }
           }
           return value;
