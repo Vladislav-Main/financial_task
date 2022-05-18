@@ -23,7 +23,29 @@ const priceTickerSlice = createSlice({
   initialState: priceTickerAdapter.getInitialState(),
   reducers: {
     fetchData(state, action: PayloadAction<PriceTicker[]>) {
-      priceTickerAdapter.setAll(state, action.payload);
+      if (!!Object.values(JSON.parse(JSON.stringify(state.entities)))) {
+        let previousState = Object.values(
+          JSON.parse(JSON.stringify(state.entities))
+        ) as PriceTicker[];
+        let resultingPayload = action.payload.map((value: PriceTicker) => {
+          if (previousState) {
+            value.changeArrow = 0;
+            value.changePercentArrow = 0;
+            let before = previousState.find(
+              (state: PriceTicker) => state.ticker === value.ticker
+            );
+            if (before) {
+              value.changeArrow = before.change < value.change ? -1 : 1;
+              value.changePercentArrow =
+                before.change_percent < value.change_percent ? -1 : 1;
+            }
+          }
+          return value;
+        });
+        priceTickerAdapter.setAll(state, resultingPayload);
+      } else {
+        priceTickerAdapter.setAll(state, action.payload);
+      }
     },
   },
 });

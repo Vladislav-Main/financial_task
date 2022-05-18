@@ -7,4 +7,6 @@ export interface PriceTicker {
   dividend: number;
   yield: number;
   last_trade_time: string;
+  changeArrow?: number;
+  changePercentArrow?: number;
 }
